@@ -48,7 +48,7 @@ public final class AikaTileService extends TileService {
         if (tile == null) return;
         boolean enabled = Prefs.isListeningEnabled(this);
         tile.setState(enabled ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
-        tile.setSubtitle(enabled ? "Слушает" : "Пауза");
+        tile.setSubtitle(getString(enabled ? R.string.tile_listening : R.string.tile_paused));
         tile.updateTile();
     }
 }

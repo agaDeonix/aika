@@ -10,6 +10,7 @@ import android.provider.Settings
 import androidx.lifecycle.AndroidViewModel
 import dev.aika.assistant.DiagnosticLog
 import dev.aika.assistant.Prefs
+import dev.aika.assistant.R
 import dev.aika.assistant.actions.AikaAccessibilityService
 import dev.aika.assistant.audio.MicrophoneService
 import kotlinx.coroutines.channels.Channel
@@ -43,12 +44,14 @@ class MainStore(application: Application) : AndroidViewModel(application) {
     private fun startListening() {
         if (!hasMicrophonePermission()) {
             effectChannel.trySend(MainEffect.RequestMicrophone)
-            mutate(MainMutation.ShowMessage("Сначала разрешите доступ к микрофону"))
+            mutate(MainMutation.ShowMessage(context.getString(R.string.microphone_permission_required)))
             return
         }
         Prefs.setListeningEnabled(context, true)
         runCatching { MicrophoneService.start(context) }
-            .onFailure { mutate(MainMutation.ShowMessage("Не удалось запустить микрофон: ${it.message}")) }
+            .onFailure {
+                mutate(MainMutation.ShowMessage(context.getString(R.string.microphone_start_failed, it.message.orEmpty())))
+            }
         refresh()
     }
 
@@ -60,7 +63,7 @@ class MainStore(application: Application) : AndroidViewModel(application) {
 
     private fun testCommand(intent: MainIntent.TestCommand) {
         val queued = AikaAccessibilityService.enqueue(context, intent.command)
-        if (!queued) mutate(MainMutation.ShowMessage("Включите сервис управления экраном"))
+        if (!queued) mutate(MainMutation.ShowMessage(context.getString(R.string.accessibility_required)))
         refresh()
     }
 

@@ -48,6 +48,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -138,8 +139,8 @@ private fun AikaScreen(
             TopAppBar(
                 title = {
                     Column {
-                        Text("Айка", fontWeight = FontWeight.Bold)
-                        Text("Локальный голосовой помощник", fontSize = 12.sp)
+                        Text(stringResource(R.string.app_name), fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.app_subtitle), fontSize = 12.sp)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = PalePurple),
@@ -198,14 +199,13 @@ private fun HeroCard(state: MainState, onIntent: (MainIntent) -> Unit) {
     ) {
         Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(
-                if (state.listeningEnabled) "Айка слушает" else "Айка на паузе",
+                stringResource(if (state.listeningEnabled) R.string.status_listening else R.string.status_paused),
                 color = Color.White,
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                if (state.listeningEnabled) "Скажите «Айка, дальше» или другую настроенную команду."
-                else "Включите прослушивание, когда планшет разблокирован.",
+                stringResource(if (state.listeningEnabled) R.string.listening_hint_on else R.string.listening_hint_off),
                 color = Color.White.copy(alpha = 0.86f),
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -216,10 +216,10 @@ private fun HeroCard(state: MainState, onIntent: (MainIntent) -> Unit) {
                     },
                 )
                 Spacer(Modifier.width(12.dp))
-                Text("Локальное прослушивание", color = Color.White, fontWeight = FontWeight.Medium)
+                Text(stringResource(R.string.local_listening), color = Color.White, fontWeight = FontWeight.Medium)
             }
             Text(
-                "Аудио не сохраняется и не отправляется в сеть. Android показывает системный индикатор микрофона.",
+                stringResource(R.string.privacy_summary),
                 color = Color.White.copy(alpha = 0.72f),
                 fontSize = 12.sp,
             )
@@ -229,16 +229,19 @@ private fun HeroCard(state: MainState, onIntent: (MainIntent) -> Unit) {
 
 @Composable
 private fun SetupCard(state: MainState, onIntent: (MainIntent) -> Unit) {
-    SectionCard("Настройка", if (state.setupComplete) "Готово к работе" else "Выполните три шага") {
-        SetupRow("1", "Микрофон", state.microphoneGranted, "Разрешить") {
+    SectionCard(
+        stringResource(R.string.setup_title),
+        stringResource(if (state.setupComplete) R.string.setup_ready else R.string.setup_steps),
+    ) {
+        SetupRow("1", stringResource(R.string.microphone), state.microphoneGranted, stringResource(R.string.allow)) {
             onIntent(MainIntent.GrantMicrophone)
         }
         HorizontalDivider()
-        SetupRow("2", "Системный ассистент", state.assistantSelected, "Выбрать") {
+        SetupRow("2", stringResource(R.string.system_assistant), state.assistantSelected, stringResource(R.string.select)) {
             onIntent(MainIntent.SelectAssistant)
         }
         HorizontalDivider()
-        SetupRow("3", "Управление экраном", state.accessibilityEnabled, "Включить") {
+        SetupRow("3", stringResource(R.string.screen_control), state.accessibilityEnabled, stringResource(R.string.enable)) {
             onIntent(MainIntent.EnableAccessibility)
         }
     }
@@ -266,27 +269,27 @@ private fun SetupRow(
             }
         }
         Text(label, Modifier.weight(1f).padding(horizontal = 12.dp), fontWeight = FontWeight.Medium)
-        if (enabled) Text("Включено", color = Success, fontSize = 13.sp)
+        if (enabled) Text(stringResource(R.string.enabled), color = Success, fontSize = 13.sp)
         else OutlinedButton(onClick = onClick) { Text(action) }
     }
 }
 
 @Composable
 private fun CommandsCard(onIntent: (MainIntent) -> Unit) {
-    SectionCard("Команды", "Кнопки позволяют проверить действия без голоса") {
-        CommandRow("Айка, дальше", "YouTube · свайп вверх") {
+    SectionCard(stringResource(R.string.commands_title), stringResource(R.string.commands_subtitle)) {
+        CommandRow(stringResource(R.string.command_next), stringResource(R.string.youtube_swipe)) {
             onIntent(MainIntent.TestCommand(Command.NEXT))
         }
-        CommandRow("Айка, стоп", "YouTube · пауза") {
+        CommandRow(stringResource(R.string.command_stop), stringResource(R.string.youtube_pause)) {
             onIntent(MainIntent.TestCommand(Command.PAUSE))
         }
-        CommandRow("Айка, продолжи", "YouTube · воспроизведение") {
+        CommandRow(stringResource(R.string.command_continue), stringResource(R.string.youtube_play)) {
             onIntent(MainIntent.TestCommand(Command.PLAY))
         }
-        CommandRow("Айка, назад", "Глобально · Back") {
+        CommandRow(stringResource(R.string.command_back), stringResource(R.string.global_back)) {
             onIntent(MainIntent.TestCommand(Command.BACK))
         }
-        CommandRow("Айка, домой / закрой", "Глобально · Home") {
+        CommandRow(stringResource(R.string.command_home), stringResource(R.string.global_home)) {
             onIntent(MainIntent.TestCommand(Command.HOME))
         }
     }
@@ -303,16 +306,20 @@ private fun CommandRow(title: String, subtitle: String, onClick: () -> Unit) {
             Text(subtitle, color = Ink.copy(alpha = 0.62f), fontSize = 13.sp)
         }
         Button(onClick = onClick, contentPadding = PaddingValues(horizontal = 14.dp)) {
-            Text("Тест")
+            Text(stringResource(R.string.test))
         }
     }
 }
 
 @Composable
 private fun DiagnosticsCard(state: MainState) {
-    SectionCard("Диагностика", "Текущее приложение: ${state.foregroundPackage}") {
+    val foregroundPackage = state.foregroundPackage.ifBlank { stringResource(R.string.unknown) }
+    SectionCard(
+        stringResource(R.string.diagnostics_title),
+        stringResource(R.string.current_app, foregroundPackage),
+    ) {
         if (state.diagnosticEvents.isEmpty()) {
-            Text("Событий пока нет", color = Ink.copy(alpha = 0.6f))
+            Text(stringResource(R.string.no_events), color = Ink.copy(alpha = 0.6f))
         } else {
             state.diagnosticEvents.take(12).forEach { event ->
                 Text(event, fontSize = 12.sp, modifier = Modifier.padding(vertical = 3.dp))

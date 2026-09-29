@@ -70,7 +70,7 @@ public final class MicrophoneService extends Service {
         super.onCreate();
         destroyed = false;
         createChannel();
-        startForeground(NOTIFICATION_ID, notification("Подготовка…"), ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE);
+        startForeground(NOTIFICATION_ID, notification(getString(R.string.notification_preparing)), ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE);
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -94,7 +94,7 @@ public final class MicrophoneService extends Service {
             return START_NOT_STICKY;
         }
         if (canListenNow()) startRecognizer();
-        else updateNotification("Пауза: экран заблокирован");
+        else updateNotification(getString(R.string.notification_locked));
         return START_STICKY;
     }
 
@@ -125,7 +125,7 @@ public final class MicrophoneService extends Service {
         Model model = null;
         Recognizer recognizer = null;
         try {
-            updateNotification("Подготовка локальной модели…");
+            updateNotification(getString(R.string.notification_preparing_model));
             File modelDir = ModelInstaller.install(this);
             model = new Model(modelDir.getAbsolutePath());
             recognizer = new Recognizer(model, SAMPLE_RATE, GRAMMAR);
@@ -140,7 +140,7 @@ public final class MicrophoneService extends Service {
             byte[] buffer = new byte[size];
             audioRecord.startRecording();
             DiagnosticLog.add(this, "local recognizer listening");
-            updateNotification("Слушаю команды с «Айка»");
+            updateNotification(getString(R.string.notification_listening));
 
             while (running) {
                 int read = audioRecord.read(buffer, 0, buffer.length);
@@ -153,7 +153,7 @@ public final class MicrophoneService extends Service {
         } catch (Exception exception) {
             DiagnosticLog.add(this, "recognizer error: " + exception.getClass().getSimpleName()
                     + ": " + exception.getMessage());
-            updateNotification("Ошибка модели — откройте приложение");
+            updateNotification(getString(R.string.notification_model_error));
         } finally {
             releaseAudio();
             if (recognizer != null) recognizer.close();
@@ -187,7 +187,7 @@ public final class MicrophoneService extends Service {
         running = false;
         releaseAudio();
         DiagnosticLog.add(this, "recognizer stopped: " + reason);
-        updateNotification("Пауза: " + reason);
+        updateNotification(getString(R.string.notification_paused));
     }
 
     private void releaseAudio() {
@@ -207,7 +207,7 @@ public final class MicrophoneService extends Service {
     }
 
     private void createChannel() {
-        NotificationChannel channel = new NotificationChannel(CHANNEL, "Прослушивание Айки",
+        NotificationChannel channel = new NotificationChannel(CHANNEL, getString(R.string.notification_channel),
                 NotificationManager.IMPORTANCE_LOW);
         channel.setSound(null, null);
         getSystemService(NotificationManager.class).createNotificationChannel(channel);
@@ -221,12 +221,12 @@ public final class MicrophoneService extends Service {
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         return new Notification.Builder(this, CHANNEL)
                 .setSmallIcon(R.drawable.ic_mic)
-                .setContentTitle("Айка")
+                .setContentTitle(getString(R.string.app_name))
                 .setContentText(state)
                 .setContentIntent(open)
                 .setOngoing(true)
                 .setCategory(Notification.CATEGORY_SERVICE)
-                .addAction(new Notification.Action.Builder(null, "Остановить", stop).build())
+                .addAction(new Notification.Action.Builder(null, getString(R.string.notification_stop), stop).build())
                 .build();
     }
 

@@ -7,7 +7,7 @@ data class MainState(
     val assistantSelected: Boolean = false,
     val accessibilityEnabled: Boolean = false,
     val listeningEnabled: Boolean = false,
-    val foregroundPackage: String = "неизвестно",
+    val foregroundPackage: String = "",
     val diagnosticEvents: List<String> = emptyList(),
     val message: String? = null,
 ) {

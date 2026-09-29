@@ -19,7 +19,7 @@ import dev.aika.assistant.DiagnosticLog;
 public final class AikaAccessibilityService extends AccessibilityService {
     private static final int MAX_QUEUE = 3;
     private static volatile WeakReference<AikaAccessibilityService> instance = new WeakReference<>(null);
-    private static volatile String foregroundPackage = "неизвестно";
+    private static volatile String foregroundPackage = "";
 
     private final ArrayDeque<Command> queue = new ArrayDeque<>();
     private final Handler main = new Handler(Looper.getMainLooper());
