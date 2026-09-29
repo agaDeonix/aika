@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Айка</string>
+    <string name="app_subtitle">Локальный голосовой помощник</string>
+    <string name="accessibility_service_label">Айка — управление экраном</string>
+    <string name="accessibility_description">Выполняет только настроенные голосовые команды: назад, домой, свайп и управление воспроизведением.</string>
+
+    <string name="status_listening">Айка слушает</string>
+    <string name="status_paused">Айка на паузе</string>
+    <string name="listening_hint_on">Скажите «Айка, дальше» или другую настроенную команду.</string>
+    <string name="listening_hint_off">Включите прослушивание, когда планшет разблокирован.</string>
+    <string name="local_listening">Локальное прослушивание</string>
+    <string name="privacy_summary">Аудио не сохраняется и не отправляется в сеть. Android показывает системный индикатор микрофона.</string>
+
+    <string name="setup_title">Настройка</string>
+    <string name="setup_ready">Готово к работе</string>
+    <string name="setup_steps">Выполните три шага</string>
+    <string name="microphone">Микрофон</string>
+    <string name="allow">Разрешить</string>
+    <string name="system_assistant">Системный ассистент</string>
+    <string name="select">Выбрать</string>
+    <string name="screen_control">Управление экраном</string>
+    <string name="enable">Включить</string>
+    <string name="enabled">Включено</string>
+
+    <string name="commands_title">Команды</string>
+    <string name="commands_subtitle">Кнопки позволяют проверить действия без голоса</string>
+    <string name="command_next">Айка, дальше</string>
+    <string name="command_stop">Айка, стоп</string>
+    <string name="command_continue">Айка, продолжи</string>
+    <string name="command_back">Айка, назад</string>
+    <string name="command_home">Айка, домой / закрой</string>
+    <string name="youtube_swipe">YouTube · свайп вверх</string>
+    <string name="youtube_pause">YouTube · пауза</string>
+    <string name="youtube_play">YouTube · воспроизведение</string>
+    <string name="global_back">Глобально · Back</string>
+    <string name="global_home">Глобально · Home</string>
+    <string name="test">Тест</string>
+
+    <string name="diagnostics_title">Диагностика</string>
+    <string name="current_app">Текущее приложение: %1$s</string>
+    <string name="unknown">неизвестно</string>
+    <string name="no_events">Событий пока нет</string>
+
+    <string name="microphone_permission_required">Сначала разрешите доступ к микрофону</string>
+    <string name="microphone_start_failed">Не удалось запустить микрофон: %1$s</string>
+    <string name="accessibility_required">Включите сервис управления экраном</string>
+
+    <string name="tile_listening">Слушает</string>
+    <string name="tile_paused">Пауза</string>
+    <string name="notification_channel">Прослушивание Айки</string>
+    <string name="notification_preparing">Подготовка…</string>
+    <string name="notification_locked">Пауза: экран заблокирован</string>
+    <string name="notification_preparing_model">Подготовка локальной модели…</string>
+    <string name="notification_listening">Слушаю команды с «Айка»</string>
+    <string name="notification_model_error">Ошибка модели — откройте приложение</string>
+    <string name="notification_paused">Прослушивание приостановлено</string>
+    <string name="notification_stop">Остановить</string>
+</resources>
